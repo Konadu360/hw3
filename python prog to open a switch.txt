@@ -1,0 +1,37 @@
+import getpass // to read password without printing on screen
+import sys
+import telnetlib //import telnet library
+import time //use to control flow of prog by pausing script certain duration
+
+#Getting the user information
+user=input("Enter User name: ")
+password=getpass.getpass()
+
+#open file
+iplist=open("ipfile.txt")
+
+#for loop to read each IP address from file and execute commands
+for line in  iplist:
+
+ Host=line.strip("\n")    
+ print ("Configuring Switch",Host)
+ tn = telnetlib.Telnet(Host) // connecting to a host(ip address of the device)    
+ tn.read_until(b"Username: ")   
+ tn.write(user.encode('ascii') + b"\n")
+ tn.read_until(b"Password: ")
+ tn.write(password.encode('ascii')+b"\n")
+ time.sleep(2)     
+ tn.write(b"enable\n")  
+ time.sleep(2)
+ tn.write(b"admin\n")  
+ time.sleep(2)
+ tn.write(b"config t\n")
+ time.sleep(2)
+ tn.write(b"snmp-server community Secured ro\n")   # Secured is the string here in this example
+ print ("Switch ",Host,"Configured")
+ line=tn.read_some()
+ tn.close()                           
+ print (line)                      
+
+#closing file 
+ipfile.close()
