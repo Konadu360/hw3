@@ -1,0 +1,1458 @@
+PE1#
+==============
+Building configuration...
+
+Current configuration : 3222 bytes
+!
+! Last configuration change at 21:07:25 UTC Thu Oct 15 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname PE1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+ip vrf Customer-A-site-1
+ rd 64501:1
+ route-target export 64501:1
+ route-target import 64501:1
+!
+ip vrf Customer-B-site-1
+ rd 64501:2
+ route-target export 64501:2
+ route-target import 64501:2
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.1.1.1 255.255.255.255
+!
+interface FastEthernet0/0
+ description to CE1-A
+ ip vrf forwarding Customer-A-site-1
+ ip address 10.0.0.1 255.255.255.252
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ description to P
+ ip address 10.0.0.9 255.255.255.252
+ speed auto
+ duplex auto
+ mpls ip
+ mpls label protocol ldp
+!
+interface FastEthernet2/1
+ description to CE1-B
+ ip vrf forwarding Customer-B-site-1
+ ip address 10.0.0.5 255.255.255.252
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.1.1.1 0.0.0.0 area 0
+!
+router bgp 64501
+ bgp log-neighbor-changes
+ neighbor 10.1.1.3 remote-as 64501
+ neighbor 10.1.1.3 update-source Loopback0
+ !
+ address-family vpnv4
+  neighbor 10.1.1.3 activate
+  neighbor 10.1.1.3 send-community extended
+ exit-address-family
+ !
+ address-family ipv4 vrf Customer-A-site-1
+  neighbor 10.0.0.2 remote-as 64401
+  neighbor 10.0.0.2 activate
+ exit-address-family
+ !
+ address-family ipv4 vrf Customer-B-site-1
+  neighbor 10.0.0.6 remote-as 64301
+  neighbor 10.0.0.6 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+mpls ldp router-id Loopback0
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+
+
+PE2
+====================
+Building configuration...
+
+Current configuration : 3230 bytes
+!
+! Last configuration change at 21:12:13 UTC Thu Oct 15 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname PE2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+ip vrf Customer-A-site-1
+ rd 64501:1
+ route-target export 64501:1
+ route-target import 64501:1
+!
+ip vrf Customer-B-site-1
+ rd 64501:2
+ route-target export 64501:2
+ route-target import 64501:2
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.1.1.3 255.255.255.255
+!
+interface FastEthernet0/0
+ description to P
+ ip address 10.0.0.14 255.255.255.252
+ duplex full
+ mpls ip
+ mpls label protocol ldp
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ description to CE2-A
+ ip vrf forwarding Customer-A-site-1
+ ip address 10.0.0.17 255.255.255.252
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/1
+ description to CE2-B
+ ip vrf forwarding Customer-B-site-1
+ ip address 10.0.0.21 255.255.255.252
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ network 10.0.0.12 0.0.0.3 area 0
+ network 10.1.1.3 0.0.0.0 area 0
+!
+router bgp 64501
+ bgp log-neighbor-changes
+ neighbor 10.1.1.1 remote-as 64501
+ neighbor 10.1.1.1 update-source Loopback0
+ !
+ address-family vpnv4
+  neighbor 10.1.1.1 activate
+  neighbor 10.1.1.1 send-community extended
+ exit-address-family
+ !
+ address-family ipv4 vrf Customer-A-site-1
+  neighbor 10.0.0.18 remote-as 64402
+  neighbor 10.0.0.18 activate
+ exit-address-family
+ !
+ address-family ipv4 vrf Customer-B-site-1
+  neighbor 10.0.0.22 remote-as 64302
+  neighbor 10.0.0.22 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+mpls ldp router-id Loopback0
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+
+P
+===================
+Building configuration...
+
+Current configuration : 2482 bytes
+!
+! Last configuration change at 20:05:12 UTC Thu Oct 15 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname p
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.1.1.2 255.255.255.255
+!
+interface FastEthernet0/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ description to PE2
+ ip address 10.0.0.13 255.255.255.252
+ speed auto
+ duplex auto
+ mpls ip
+ mpls label protocol ldp
+!
+interface FastEthernet2/1
+ description to PE1
+ ip address 10.0.0.10 255.255.255.252
+ speed auto
+ duplex auto
+ mpls ip
+ mpls label protocol ldp
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.0.12 0.0.0.3 area 0
+ network 10.1.1.2 0.0.0.0 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+mpls ldp router-id Loopback0
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+CE-1A
+==========================
+Building configuration...
+
+Current configuration : 2375 bytes
+!
+! Last configuration change at 21:18:08 UTC Thu Oct 15 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CE1-A
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description to PE2
+ ip address 10.0.0.2 255.255.255.252
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ description to PC1-A
+ ip address 172.16.1.254 255.255.255.0
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router bgp 64401
+ bgp log-neighbor-changes
+ network 172.16.1.0 mask 255.255.255.0
+ neighbor 10.0.0.1 remote-as 64501
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 172.16.1.0 255.255.255.0 Null0
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+
+
+CE2-A
+=======================
+Building configuration...
+
+Current configuration : 2356 bytes
+!
+! Last configuration change at 21:39:59 UTC Thu Oct 15 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CE2-A
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description to PE-2
+ ip address 10.0.0.18 255.255.255.252
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ ip address 172.16.2.254 255.255.255.0
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router bgp 64402
+ bgp log-neighbor-changes
+ network 172.16.2.0 mask 255.255.255.0
+ neighbor 10.0.0.17 remote-as 64501
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 172.16.2.0 255.255.255.0 Null0
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+
+CE-1B
+========================
+Building configuration...
+
+Current configuration : 2336 bytes
+!
+! Last configuration change at 00:18:07 UTC Fri Oct 16 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CE1-B
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description to PE-1
+ ip address 10.0.0.6 255.255.255.252
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ description to PC1-B
+ ip address 172.16.1.254 255.255.255.0
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router bgp 64301
+ bgp log-neighbor-changes
+ network 172.16.1.0 mask 255.255.255.0
+ neighbor 10.0.0.5 remote-as 64501
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+CE-2B
+Building configuration...
+
+Current configuration : 2276 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CE2-B
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description to PE-2
+ ip address 10.0.0.22 255.255.255.252
+ duplex full
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/4
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/5
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/6
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/7
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet4/0
+ description to PC2-B
+ ip address 172.16.2.254 255.255.255.0
+ duplex full
+!
+interface Ethernet4/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet4/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface POS5/0
+ no ip address
+ shutdown
+!
+interface Serial6/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial6/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router bgp 64302
+ bgp log-neighbor-changes
+ network 172.16.2.0 mask 255.255.255.0
+ neighbor 10.0.0.21 remote-as 64501
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
+
+
+
+
+
+
+
+
+

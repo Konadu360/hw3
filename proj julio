@@ -1,0 +1,143 @@
+R1
+conf t 
+router bgp 200
+no neighbor 192.168.170.5 remote-as 200
+no neighbor 192.168.170.5 update-source Loopback0
+exit
+router bgp 200
+neighbor 192.168.170.2 remote-as 200
+neighbor 192.168.170.2 update-source Loopback0
+neighbor 192.168.170.3 remote-as 200
+neighbor 192.168.170.3 update-source Loopback0
+end 
+wr me
+
+R2
+conf t
+router bgp 200
+neighbor 192.168.170.1 remote-as 200
+neighbor 192.168.170.1 update-source Loopback0
+neighbor 192.168.170.3 remote-as 200
+neighbor 192.168.170.3 update-source Loopback0
+end 
+wr me
+
+R3
+conf t
+router bgp 200
+neighbor 192.168.170.1 remote-as 200
+neighbor 192.168.170.1 update-source Loopback0
+neighbor 192.168.170.2 remote-as 200
+neighbor 192.168.170.2 update-source Loopback0
+neighbor 192.168.170.4 remote-as 200
+neighbor 192.168.170.4 update-source Loopback0
+neighbor 192.168.170.5 remote-as 200
+neighbor 192.168.170.5 update-source Loopback0
+end 
+wr me
+
+R4
+conf t
+router bgp 200
+neighbor 192.168.170.3 remote-as 200
+neighbor 192.168.170.3 update-source Loopback0
+neighbor 192.168.170.5 remote-as 200
+neighbor 192.168.170.5 update-source Loopback0
+end 
+wr me
+
+R5
+conf t 
+router bgp 200
+no neighbor 192.168.170.1 remote-as 200
+no neighbor 192.168.170.1 update-source Loopback0
+exit
+router bgp 200
+neighbor 192.168.170.3 remote-as 200
+neighbor 192.168.170.3 update-source Loopback0
+neighbor 192.168.170.4 remote-as 200
+neighbor 192.168.170.4 update-source Loopback0
+end 
+wr me
+
+
+
+
+smart way
+=============
+R1
+conf t
+router bgp 200
+neighbor KKY_TEMP peer-group
+neighbor KKY_TEMP remote-as 200
+neighbor KKY_TEMP update-source Loopback0
+neighbor KKY_TEMP next-hop-self
+neighbor 192.168.170.2 peer-group KKY_TEMP
+neighbor 192.168.170.3 peer-group KKY_TEMP
+neighbor 192.168.170.4 peer-group KKY_TEMP
+neighbor 192.168.170.5 peer-group KKY_TEMP
+end
+wr me
+
+R2
+conf t
+router bgp 200
+neighbor KKY_TEMP peer-group
+neighbor KKY_TEMP remote-as 200
+neighbor KKY_TEMP update-source Loopback0
+neighbor KKY_TEMP next-hop-self
+neighbor 192.168.170.1 peer-group KKY_TEMP
+neighbor 192.168.170.3 peer-group KKY_TEMP
+neighbor 192.168.170.4 peer-group KKY_TEMP
+neighbor 192.168.170.5 peer-group KKY_TEMP
+end
+wr me
+
+R3
+conf t
+router bgp 200
+neighbor KKY_TEMP peer-group
+neighbor KKY_TEMP remote-as 200
+neighbor KKY_TEMP update-source Loopback0
+neighbor KKY_TEMP next-hop-self
+neighbor 192.168.170.1 peer-group KKY_TEMP
+neighbor 192.168.170.2 peer-group KKY_TEMP
+neighbor 192.168.170.4 peer-group KKY_TEMP
+neighbor 192.168.170.5 peer-group KKY_TEMP
+end
+wr me
+
+R4
+conf t
+router bgp 200
+neighbor KKY_TEMP peer-group
+neighbor KKY_TEMP remote-as 200
+neighbor KKY_TEMP update-source Loopback0
+neighbor KKY_TEMP next-hop-self
+neighbor 192.168.170.1 peer-group KKY_TEMP
+neighbor 192.168.170.2 peer-group KKY_TEMP
+neighbor 192.168.170.3 peer-group KKY_TEMP
+neighbor 192.168.170.5 peer-group KKY_TEMP
+end
+wr me
+
+R5
+conf t
+router bgp 200
+neighbor KKY_TEMP peer-group
+neighbor KKY_TEMP remote-as 200
+neighbor KKY_TEMP update-source Loopback0
+neighbor KKY_TEMP next-hop-self
+neighbor 192.168.170.1 peer-group KKY_TEMP
+neighbor 192.168.170.2 peer-group KKY_TEMP
+neighbor 192.168.170.3 peer-group KKY_TEMP
+neighbor 192.168.170.4 peer-group KKY_TEMP
+end
+wr me
+
+conf t
+no router bgp 200
+
+conf t
+router ospf 1
+redistribute bgp 200 subnets

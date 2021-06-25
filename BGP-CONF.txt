@@ -1,0 +1,234 @@
+BGP   (IBGP and EBGP)
+=====================
+IBGP
+=====
+R1
+bgp 200
+router-id 10.160.0.1
+peer 192.168.160.2 as-number 200
+address-family ipv4 unicast
+peer 192.168.160.2 enable
+peer 192.168.160.2 next-hop-local
+qu
+peer 192.168.160.86 as-number 200
+address-family ipv4 unicast
+peer 192.168.160.86 enable
+peer 192.168.160.86 next-hop-local
+qu
+
+
+peer 10.160.0.4 as-number 200
+peer 10.160.0.4 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.4 enable
+peer 10.160.0.4 next-hop-local
+qu
+peer 10.160.0.5 as-number 200
+peer 10.160.0.5 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.5 enable
+peer 10.160.0.5 next-hop-local
+qu
+qu
+save
+
+R2
+bgp 200
+router-id 10.160.0.2
+peer 10.160.0.1 as-number 200
+peer 10.160.0.1 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.1 enable
+peer 10.160.0.1 next-hop-local
+qu
+peer 10.160.0.3 as-number 200
+peer 10.160.0.3 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.3 enable
+peer 10.160.0.3 next-hop-local
+qu
+peer 10.160.0.4 as-number 200
+peer 10.160.0.4 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.4 enable
+peer 10.160.0.4 next-hop-local
+qu
+peer 10.160.0.5 as-number 200
+peer 10.160.0.5 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.5 enable
+peer 10.160.0.5 next-hop-local
+qu
+qu
+save
+
+
+R3 -- AS RR
+bgp 200
+address-family ipv4 unicast
+peer 10.160.0.1 reflect-client
+peer 10.160.0.2 reflect-client
+peer 10.160.0.4 reflect-client
+peer 10.160.0.5 reflect-client
+
+
+bgp 200
+router-id 10.160.0.3
+peer 10.160.0.1 as-number 200
+peer 10.160.0.1 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.1 enable
+qu
+peer 10.160.0.2 as-number 200
+peer 10.160.0.2 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.2 enable
+qu
+peer 10.160.0.4 as-number 200
+peer 10.160.0.4 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.4 enable
+qu
+peer 10.160.0.5 as-number 200
+peer 10.160.0.5 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.5 enable
+qu
+qu
+save
+
+
+R4
+bgp 200
+router-id 10.160.0.4
+peer 10.160.0.1 as-number 200
+peer 10.160.0.1 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.1 enable
+peer 10.160.0.1 next-hop-local
+qu
+peer 10.160.0.2 as-number 200
+peer 10.160.0.2 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.2 enable
+peer 10.160.0.2 next-hop-local
+qu
+peer 10.160.0.3 as-number 200
+peer 10.160.0.3 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.3 enable
+peer 10.160.0.3 next-hop-local
+qu
+peer 10.160.0.5 as-number 200
+peer 10.160.0.5 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.5 enable
+peer 10.160.0.5 next-hop-local
+qu
+qu
+save
+y
+
+
+R5
+bgp 200
+router-id 10.160.0.5
+peer 10.160.0.1 as-number 200
+peer 10.160.0.1 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.1 enable
+peer 10.160.0.1 next-hop-local
+qu
+peer 10.160.0.2 as-number 200
+peer 10.160.0.2 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.2 enable
+peer 10.160.0.2 next-hop-local
+qu
+peer 10.160.0.3 as-number 200
+peer 10.160.0.3 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.3 enable
+peer 10.160.0.3 next-hop-local
+qu
+peer 10.160.0.4 as-number 200
+peer 10.160.0.4 connect-interface loopback 0
+address-family ipv4 unicast
+peer 10.160.0.4 enable
+peer 10.160.0.4 next-hop-local
+qu
+qu
+save
+y
+
+y
+
+
+EBGP
+==========
+Configure BGP to redistribute OSPF routes ON R1 AND R5:
+R1
+bgp 200
+peer 10.160.1.6 as-number 100
+address-family ipv4 unicast
+peer 10.160.1.6 enable
+import-route ospf
+qu
+qu
+save
+y
+
+y
+
+
+R7
+bgp 100
+peer 10.160.1.5 as-number 200
+address-family ipv4 unicast
+peer 10.160.1.5 enable
+network 10.160.7.0 24
+network 10.160.0.7 32
+qu
+qu
+save
+y
+
+y
+
+
+
+R5
+sys
+bgp 200
+peer 10.160.1.2 as-number 300
+address-family ipv4 unicast
+peer 10.160.1.2 enable
+import-route direct
+import-route ospf
+
+R6
+sys
+bgp 300
+peer 10.160.1.1 as-number 200
+address-family ipv4 unicast
+peer 10.160.1.1 enable
+network 10.160.6.0 24
+qu
+qu
+save
+y
+
+y
+
+
+
+Configure R1 AND R5 to redistribute BGP routes into OSPF:
+R1
+sys
+ospf
+import-route bgp
+
+R5
+sys
+ospf
+import-route bgp
