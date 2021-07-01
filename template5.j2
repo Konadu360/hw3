@@ -1,0 +1,11 @@
+{% for interface in interface_list %}
+interface {{interface.get('name','UNKNOWN')}}
+description {{interface.get('desc','UNKNOWN')|upper}}
+{% if interface.uplink %}switchport mode trunk
+{% else %}switchport access vlan {{interface.get('vlan','UNKNOWN')}}
+switchportmode access
+{% endif %}speed {{interface.get('name','UNKNOWN')|get_interface_speed}}
+{% endfor %}!
+{% block http %}no ip http server  
+no ip http secure-server 
+{% endblock %}

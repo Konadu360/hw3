@@ -1,0 +1,8 @@
+{% for interface in iface_pattern %}
+interface {{interface.get('name','UNKNOWN')}}
+description {{interface.get('desc','UNKNOWN')|upper}}
+{% if interface.uplink %}switchport mode trunk
+{% else %}switchport access vlan {{interface.get('vlan','UNKNOWN')}}
+switchportmode access
+{% endif %}
+{% endfor %}
